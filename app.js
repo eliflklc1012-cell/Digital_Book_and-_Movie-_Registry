@@ -122,3 +122,200 @@ function createCard(id, title, img, meta, type, container, isSearch, totalSeason
     `;
     container.appendChild(card);
 }
+function saveItem(id, title, img, meta, type, totalSeasons) {
+    let lib = JSON.parse(localStorage.getItem('myDigitalLibrary')) || [];
+    if (lib.some(i => i.id === id && i.type === type)) return alert('Bu eser zaten kütüphanenizde ekli!');
+
+    lib.push({
+        id, title, imgUrl: img, meta, type,
+        userRating: 0, userComment: "", userDate: "", userQuote: "",
+        bookPage: "", movieTime: "", watchedSeasons: [],
+        totalSeasons: totalSeasons || 0
+    });
+    localStorage.setItem('myDigitalLibrary', JSON.stringify(lib));
+    alert('Koleksiyonunuza başarıyla dahil edildi!');
+    renderLibrary();
+}
+
+function deleteItem(id, type) {
+    let lib = JSON.parse(localStorage.getItem('myDigitalLibrary')) || [];
+    lib = lib.filter(i => !(i.id === id && i.type === type));
+    localStorage.setItem('myDigitalLibrary', JSON.stringify(lib));
+    renderLibrary();
+}
+
+function renderLibrary() {
+    const bookContainer = document.getElementById('library-books');
+    const movieContainer = document.getElementById('library-movies');
+    const seriesContainer = document.getElementById('library-series');
+    
+    if(!bookContainer || !movieContainer || !seriesContainer) return;
+    
+    bookContainer.innerHTML = '';
+    movieContainer.innerHTML = '';
+    seriesContainer.innerHTML = '';
+    
+    const lib = JSON.parse(localStorage.getItem('myDigitalLibrary')) || [];
+    let bCount = 0, mCount = 0, sCount = 0;
+
+    lib.forEach(item => {
+        if(item.type === 'book') {
+            bCount++;
+            createCard(item.id, item.title, item.imgUrl, item.meta, item.type, bookContainer, false, item.totalSeasons);
+        } else if(item.type === 'movie') {
+            mCount++;
+            createCard(item.id, item.title, item.imgUrl, item.meta, item.type, movieContainer, false, item.totalSeasons);
+        } else if(item.type === 'series') {
+            sCount++;
+            createCard(item.id, item.title, item.imgUrl, item.meta, item.type, seriesContainer, false, item.totalSeasons);
+        }
+    });
+    
+    document.getElementById('book-count').innerText = bCount;
+    document.getElementById('movie-count').innerText = mCount;
+    document.getElementById('series-count').innerText = sCount;
+
+    if(bCount === 0) bookContainer.innerHTML = '<p style="color: #777; font-size:0.9rem; padding-left:5px;">Henüz kayıtlı kitap yok.</p>';
+    if(mCount === 0) movieContainer.innerHTML = '<p style="color: #777; font-size:0.9rem; padding-left:5px;">Henüz kayıtlı film yok.</p>';
+    if(sCount === 0) seriesContainer.innerHTML = '<p style="color: #777; font-size:0.9rem; padding-left:5px;">Henüz kayıtlı dizi yok.</p>';
+}
+
+// --- DİNAMİK VE KUSURSUZ MODAL ALTI YÖNETİCİSİ ---
+function openDetailModal(id, type) {
+    currentEditingId = id;
+    currentEditingType = type;
+    const lib = JSON.parse(localStorage.getItem('myDigitalLibrary')) || [];
+    const item = lib.find(i => i.id === id && i.type === type);
+    if (!item) return;
+
+    document.getElementById('modal-title').innerText = item.title;
+    document.getElementById('modal-meta').innerText = item.meta;
+    document.getElementById('modal-img').src = item.imgUrl;
+    
+    const badge = document.getElementById('modal-type-badge');
+    badge.innerText = type === 'book' ? 'Kitap' : (type === 'series' ? 'Dizi' : 'Film');
+    badge.className = `badge ${type === 'book' ? 'badge-kitap' : 'badge-film'}`;
+
+    document.getElementById('user-date').value = item.userDate || "";
+    document.getElementById('user-comment').value = item.userComment || "";
+    document.getElementById('user-quote').value = item.userQuote || "";
+    setRating(item.userRating || 0);
+
+    const bookArea = document.getElementById('book-details-area');
+    const movieArea = document.getElementById('movie-details-area');
+    const seasonContainer = document.getElementById('season-selector');
+
+    let seasonLabel = null;
+    if (movieArea) {
+        const labels = movieArea.getElementsByTagName('label');
+        for (let l of labels) {
+            if (l.innerText.includes("Sezon")) {
+                seasonLabel = l;
+                break;
+            }
+        }
+    }
+
+    if (type === 'book') {
+        if (bookArea) bookArea.style.display = 'block';
+        if (movieArea) movieArea.style.display = 'none';
+        document.getElementById('book-page').value = item.bookPage || "";
+        document.getElementById('quote-label').innerText = "Kitaptan Unutulmaz Alıntı & Sayfası";
+    } 
+    else if (type === 'series') {
+        if (bookArea) bookArea.style.display = 'none';
+        if (movieArea) movieArea.style.display = 'block';
+        
+        if (seasonLabel) seasonLabel.style.display = 'block';
+        if (seasonContainer) seasonContainer.style.display = 'flex';
+        
+        document.getElementById('movie-time').value = item.movieTime || "";
+        document.getElementById('quote-label').innerText = "Diziden Unutulmaz Replik / Dakika";
+        
+        const maxSeasons = item.totalSeasons && item.totalSeasons > 0 ? item.totalSeasons : 3;
+        buildSeasonSelector(item.watchedSeasons || [], maxSeasons);
+    } 
+    else if (type === 'movie') {
+        if (bookArea) bookArea.style.display = 'none';
+        if (movieArea) movieArea.style.display = 'block';
+        
+        if (seasonLabel) seasonLabel.style.display = 'none';
+        if (seasonContainer) {
+            seasonContainer.innerHTML = '';
+            seasonContainer.style.display = 'none';
+        }
+        
+        document.getElementById('movie-time').value = item.movieTime || "";
+        document.getElementById('quote-label').innerText = "Filmden Unutulmaz Replik / Dakika";
+    }
+    
+    document.getElementById('detail-modal').style.display = 'flex';
+}
+
+function closeModal() {
+    document.getElementById('detail-modal').style.display = 'none';
+}
+
+function setRating(rating) {
+    currentRating = rating;
+    const stars = document.querySelectorAll('.rating-star');
+    stars.forEach((star, index) => {
+        if (index < rating) {
+            star.classList.add('filled');
+        } else {
+            star.classList.remove('filled');
+        }
+    });
+}
+
+function buildSeasonSelector(watchedSeasons, maxSeasons) {
+    const container = document.getElementById('season-selector');
+    if(!container) return;
+    container.innerHTML = ''; 
+    
+    for (let i = 1; i <= maxSeasons; i++) {
+        const badge = document.createElement('span');
+        badge.className = `season-badge ${watchedSeasons.includes(i) ? 'watched' : ''}`;
+        badge.innerText = `${i}. Sezon`;
+        badge.onclick = function() {
+            this.classList.toggle('watched');
+        };
+        container.appendChild(badge);
+    }
+}
+
+function saveModalData() {
+    let lib = JSON.parse(localStorage.getItem('myDigitalLibrary')) || [];
+    const index = lib.findIndex(i => i.id === currentEditingId && i.type === currentEditingType);
+    
+    if (index !== -1) {
+        lib[index].userDate = document.getElementById('user-date').value;
+        lib[index].userComment = document.getElementById('user-comment').value.trim();
+        lib[index].userQuote = document.getElementById('user-quote').value.trim();
+        lib[index].userRating = currentRating;
+
+        if (currentEditingType === 'book') {
+            lib[index].bookPage = document.getElementById('book-page').value.trim();
+            lib[index].watchedSeasons = [];
+        } else if (currentEditingType === 'movie') {
+            lib[index].movieTime = document.getElementById('movie-time').value.trim();
+            lib[index].watchedSeasons = [];
+        } else if (currentEditingType === 'series') {
+            lib[index].movieTime = document.getElementById('movie-time').value.trim();
+            
+            const seasons = [];
+            const badges = document.querySelectorAll('#season-selector .season-badge');
+            badges.forEach((badge, idx) => {
+                if (badge.classList.contains('watched')) {
+                    seasons.push(idx + 1);
+                }
+            });
+            lib[index].watchedSeasons = seasons;
+        }
+
+        localStorage.setItem('myDigitalLibrary', JSON.stringify(lib));
+        alert('Değişiklikler başarıyla kaydedildi!');
+        closeModal();
+        renderLibrary();
+    }
+}
