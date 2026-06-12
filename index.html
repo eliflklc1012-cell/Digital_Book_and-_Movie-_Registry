@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dijital Medya ve Hesap Arşivim</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="auth-screen" class="auth-overlay">
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button id="tab-login" class="auth-tab active" onclick="toggleAuthMode('login')">Giriş Yap</button>
+                <button id="tab-register" class="auth-tab" onclick="toggleAuthMode('register')">Kayıt Ol</button>
+            </div>
+            
+            <div id="form-login">
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label>E-posta Adresi</label>
+                    <input type="email" id="login-email" class="form-control" placeholder="ornek@mail.com">
+                </div>
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label>Şifre</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••">
+                </div>
+                <button class="btn-primary" style="width: 100%;" onclick="handleLogin()">Giriş Yap</button>
+            </div>
+            
+            <div id="form-register" style="display: none;">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>Adınız Soyadınız</label>
+                    <input type="text" id="reg-name" class="form-control" placeholder="Örn: Rümeysa Ertekin">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>E-posta Adresi</label>
+                    <input type="email" id="reg-email" class="form-control" placeholder="ornek@mail.com">
+                </div>
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label>Şifre</label>
+                    <input type="password" id="reg-password" class="form-control" placeholder="En az 6 karakter">
+                </div>
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label>Profil Türü</label>
+                    <select id="reg-gender" class="form-control">
+                        <option value="kadın">Kadın</option>
+                        <option value="erkek">Erkek</option>
+                    </select>
+                </div>
+                <button class="btn-primary" style="width: 100%;" onclick="handleRegister()">Hesap Oluştur</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
