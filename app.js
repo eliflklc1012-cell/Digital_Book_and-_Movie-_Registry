@@ -319,3 +319,68 @@ function saveModalData() {
         renderLibrary();
     }
 }
+// --- HESAP YÖNETİMİ ---
+function saveAccount() {
+    const platform = document.getElementById('acc-platform').value.trim();
+    const username = document.getElementById('acc-username').value.trim();
+    const gender = document.getElementById('acc-gender').value;
+
+    if (!platform || !username) {
+        alert('Lütfen platform ve kullanıcı adı alanlarını doldurun!');
+        return;
+    }
+
+    let accs = JSON.parse(localStorage.getItem('myDigitalAccounts')) || [];
+    const newAcc = {
+        id: Date.now().toString(),
+        platform,
+        username,
+        gender
+    };
+    
+    accs.push(newAcc);
+    localStorage.setItem('myDigitalAccounts', JSON.stringify(accs));
+    
+    document.getElementById('acc-platform').value = '';
+    document.getElementById('acc-username').value = '';
+    renderAccounts();
+}
+
+function deleteAccount(id) {
+    let accs = JSON.parse(localStorage.getItem('myDigitalAccounts')) || [];
+    accs = accs.filter(a => a.id !== id);
+    localStorage.setItem('myDigitalAccounts', JSON.stringify(accs));
+    renderAccounts();
+}
+
+function renderAccounts() {
+    const container = document.getElementById('accounts-results');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    const accs = JSON.parse(localStorage.getItem('myDigitalAccounts')) || [];
+    
+    if(accs.length === 0) {
+        container.innerHTML = '<p style="color: #777;">Henüz eklenmiş hesap yok.</p>';
+        return;
+    }
+    
+    accs.forEach(a => {
+        const av = a.gender === 'kadın' ? 
+            'https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=150' : 
+            'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?q=80&w=150';
+        
+        const div = document.createElement('div');
+        div.className = 'account-card';
+        div.innerHTML = `
+            <span class="badge badge-acc">Hesap</span>
+            <img src="${av}" class="account-avatar" alt="Avatar">
+            <div>
+                <h3 style="font-size:1.2rem; color:#fff; margin-bottom:4px;">${a.platform}</h3>
+                <p style="color:#aaa; font-size:0.9rem;">${a.username}</p>
+            </div>
+            <button class="btn-card-action btn-remove" style="margin-top:15px;" onclick="deleteAccount('${a.id}')">Hesabı Sil</button>
+        `;
+        container.appendChild(div);
+    });
+}
