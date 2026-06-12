@@ -14,7 +14,6 @@
                 <button id="tab-login" class="auth-tab active" onclick="toggleAuthMode('login')">Giriş Yap</button>
                 <button id="tab-register" class="auth-tab" onclick="toggleAuthMode('register')">Kayıt Ol</button>
             </div>
-            
             <div id="form-login">
                 <div class="form-group" style="margin-bottom: 15px;">
                     <label>E-posta Adresi</label>
@@ -26,7 +25,6 @@
                 </div>
                 <button class="btn-primary" style="width: 100%;" onclick="handleLogin()">Giriş Yap</button>
             </div>
-            
             <div id="form-register" style="display: none;">
                 <div class="form-group" style="margin-bottom: 12px;">
                     <label>Adınız Soyadınız</label>
@@ -50,6 +48,95 @@
                 <button class="btn-primary" style="width: 100%;" onclick="handleRegister()">Hesap Oluştur</button>
             </div>
         </div>
+    </div>
+
+    <div id="app-screen" class="app-wrapper">
+        <aside class="sidebar">
+            <div class="profile-card">
+                <img src="" id="sidebar-img" alt="Profil" class="profile-img">
+                <h3 id="sidebar-name">Yükleniyor...</h3>
+                <p>Arşiv Yöneticisi</p>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active" onclick="switchPage('page-home', this)">Giriş Ekranı</li>
+                <li class="nav-item" onclick="switchPage('page-discover', this)">Keşfet & Ekle</li>
+                <li class="nav-item" onclick="switchPage('page-library', this)">Kitaplığım & Arşivim</li>
+                <li class="nav-item" onclick="switchPage('page-accounts', this)">Hesaplarım</li>
+            </ul>
+            <button class="btn-logout" onclick="handleLogout()">Oturumu Kapat</button>
+        </aside>
+
+        <main class="main-content">
+            <section id="page-home" class="page active">
+                <h1 class="hero-title">Kişisel Dijital Dünyanız</h1>
+                <p class="hero-subtitle">Tek ekrandan tüm kitaplarınızı, filmlerinizi ve alt dijital hesaplarınızı koordine edin. Detaylı alıntılar, puanlama ve izleme verileri tutun.</p>
+                <button class="btn-primary" onclick="document.querySelectorAll('.nav-item')[1].click()">Hemen İçerik Keşfet</button>
+            </section>
+
+            <section id="page-discover" class="page">
+                <h2 class="section-title">İçerik Ara ve Ekle</h2>
+                <p style="color: #aaa; margin-bottom: 20px;">Google / Açık kütüphane veritabanı üzerinden gerçek zamanlı medya bulun.</p>
+                <div class="search-container" style="display: flex; gap: 12px; padding: 10px; align-items: center;">
+                    <input type="text" id="search-query" class="search-input" style="flex-grow: 1; background: transparent; border: none;" placeholder="Film, dizi veya kitap adı yazın...">
+                    <select id="search-type" class="search-select" style="width: auto;">
+                        <option value="book">Kitap</option>
+                        <option value="movie">Film</option>
+                        <option value="series">Dizi</option>
+                    </select>
+                    <button class="btn-form" style="padding: 10px 24px;" onclick="searchMedia()">Ara</button>
+                </div>
+                <div id="search-results" class="grid-layout"></div>
+            </section>
+
+            <section id="page-library" class="page">
+                <h2 class="section-title">Koleksiyonum</h2>
+                <div class="stats-grid">
+                    <div class="stat-card"><h2 id="book-count">0</h2><p>Kitap</p></div>
+                    <div class="stat-card"><h2 id="movie-count">0</h2><p>Film</p></div>
+                    <div class="stat-card"><h2 id="series-count">0</h2><p>Dizi</p></div>
+                </div>
+                <p style="color: #aaa; margin-bottom: 30px;">Kaydettiğiniz arşivler kategorilerine göre ayrılmıştır. Üzerlerine tıklayarak detayları, kişisel incelemelerinizi ve alıntıları görebilirsiniz.</p>
+                
+                <div class="category-section">
+                    <h3>📚 Okuduğum Kitaplar</h3>
+                    <div id="library-books" class="grid-layout"></div>
+                </div>
+                <div class="category-section" style="margin-top: 40px;">
+                    <h3>🎬 İzlediğim Filmler</h3>
+                    <div id="library-movies" class="grid-layout"></div>
+                </div>
+                <div class="category-section" style="margin-top: 40px;">
+                    <h3>📺 Takip Ettiğim Diziler</h3>
+                    <div id="library-series" class="grid-layout"></div>
+                </div>
+            </section>
+
+            <section id="page-accounts" class="page">
+                <h2 class="section-title">Kayıtlı Dijital Hesaplar</h2>
+                <p style="color: #aaa; margin-bottom: 20px;">Harici alt dijital abonelik ve platform hesaplarınızı ekleyin.</p>
+                <div class="form-container">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Platform Adı</label>
+                            <input type="text" id="acc-platform" class="form-control" placeholder="Örn: Netflix">
+                        </div>
+                        <div class="form-group">
+                            <label>E-posta / Kullanıcı Adı</label>
+                            <input type="text" id="acc-username" class="form-control" placeholder="Kullanıcı adı veya mail">
+                        </div>
+                        <div class="form-group">
+                            <label>Profil Türü</label>
+                            <select id="acc-gender" class="form-control">
+                                <option value="kadın">Kadın Profili</option>
+                                <option value="erkek">Erkek Profili</option>
+                            </select>
+                        </div>
+                        <button class="btn-form" onclick="saveAccount()">Hesabı Dahil Et</button>
+                    </div>
+                </div>
+                <div id="accounts-results" class="grid-layout"></div>
+            </section>
+        </main>
     </div>
 
     <script src="auth.js"></script>
