@@ -98,15 +98,15 @@
                 <p style="color: #aaa; margin-bottom: 30px;">Kaydettiğiniz arşivler kategorilerine göre ayrılmıştır. Üzerlerine tıklayarak detayları, kişisel incelemelerinizi ve alıntıları görebilirsiniz.</p>
                 
                 <div class="category-section">
-                    <h3>📚 Okuduğum Kitaplar</h3>
+                    <h3 class="category-heading">📚 Okuduğum Kitaplar</h3>
                     <div id="library-books" class="grid-layout"></div>
                 </div>
                 <div class="category-section" style="margin-top: 40px;">
-                    <h3>🎬 İzlediğim Filmler</h3>
+                    <h3 class="category-heading">🎬 İzlediğim Filmler</h3>
                     <div id="library-movies" class="grid-layout"></div>
                 </div>
                 <div class="category-section" style="margin-top: 40px;">
-                    <h3>📺 Takip Ettiğim Diziler</h3>
+                    <h3 class="category-heading">📺 Takip Ettiğim Diziler</h3>
                     <div id="library-series" class="grid-layout"></div>
                 </div>
             </section>
@@ -139,7 +139,67 @@
         </main>
     </div>
 
+    <div id="detail-modal" class="modal-overlay">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal()">✕</button>
+            <div class="modal-header">
+                <img id="modal-img" class="modal-header-img" src="" alt="">
+                <div class="modal-header-info">
+                    <h2 id="modal-title" style="margin-bottom: 5px;">Eser Adı</h2>
+                    <p id="modal-meta" style="color:#aaa; font-size:0.9rem; margin-bottom:10px;">Yazar / Yıl</p>
+                    <span id="modal-type-badge" class="badge" style="position:static; display:inline-block; width:fit-content;"></span>
+                </div>
+            </div>
+            
+            <div style="border-top: 1px solid rgba(255,255,255,0.05); padding-top:15px;">
+                <h3 style="font-size:1.1rem; color:#6c5ce7; margin-bottom:15px;">Kişisel İnceleme ve Takip Verilerim</h3>
+                <div class="modal-body-grid">
+                    <div class="form-group">
+                        <label>Arşive Ekleme/Bitirme Tarihi</label>
+                        <input type="date" id="user-date" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Değerlendirme Puanım</label>
+                        <div id="star-rating" class="rating-zone">
+                            <span class="rating-star" onclick="setRating(1)">★</span>
+                            <span class="rating-star" onclick="setRating(2)">★</span>
+                            <span class="rating-star" onclick="setRating(3)">★</span>
+                            <span class="rating-star" onclick="setRating(4)">★</span>
+                            <span class="rating-star" onclick="setRating(5)">★</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="book-details-area" class="form-group" style="margin-bottom:15px; display:none;">
+                    <label>Okunan Sayfa / Toplam Sayfa</label>
+                    <input type="text" id="book-page" class="form-control" placeholder="Örn: Sayfa 204">
+                </div>
+
+                <div id="movie-details-area" class="form-group" style="margin-bottom:15px; display:none;">
+                    <div class="form-group">
+                        <label>Kaldığım Bölüm / Süre</label>
+                        <input type="text" id="movie-time" class="form-control" placeholder="Örn: 2. Sezon 4. Bölüm veya 01:24:00">
+                    </div>
+                    <div class="form-group" style="margin-top:12px;">
+                        <label>İzlenen Sezonlar</label>
+                        <div id="season-selector" class="season-container"></div>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom:15px;">
+                    <label>Kişisel Yorum ve İnceleme</label>
+                    <textarea id="user-comment" class="form-control" rows="2" placeholder="Eser hakkındaki şahsi eleştirileriniz..."></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom:20px;">
+                    <label id="quote-label">Beğenilen Alıntı</label>
+                    <input type="text" id="user-quote" class="form-control" placeholder="Unutulmaz bir replik veya cümle girin...">
+                </div>
+                <button class="btn-primary" style="width:100%;" onclick="saveModalData()">Değişiklikleri Arşive Kaydet</button>
+            </div>
+        </div>
+    </div>
+
     <script src="auth.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=exact_seasons_final"></script>
 </body>
 </html>
