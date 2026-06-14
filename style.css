@@ -1,0 +1,545 @@
+/*--- GENEL AYARLAR VE GÖZ ALICI ARKA PLAN ---*/
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+body {
+    background-color: #0b0b0d;
+    background-image: linear-gradient(rgba(11, 11, 13, 0.85), rgba(5, 5, 7, 0.90)), url('arkaplan.jpeg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: #ffffff;
+    height: 100vh;
+    overflow: hidden;
+}
+.auth-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+.auth-box {
+    background: rgba(26, 26, 30, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 40px;
+    border-radius: 24px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+}
+.auth-tabs {
+    display: flex;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 6px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.auth-tab {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #a0a0aa;
+    padding: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.auth-tab.active {
+    background: #6c5ce7;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
+}
+
+/* --- ANA UYGULAMA İSKELETİ --- */
+.app-wrapper {
+    display: none;
+    height: 100vh;
+    width: 100%;
+    display: flex;
+}
+
+/* --- SABİT SIDEBAR PANELİ --- */
+.sidebar {
+    width: 280px;
+    background: rgba(15, 15, 18, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
+    padding: 30px 20px;
+    justify-content: space-between;
+}
+.profile-card {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 22px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.profile-img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6c5ce7;
+    margin-bottom: 12px;
+    box-shadow: 0 0 15px rgba(108, 92, 231, 0.3);
+}
+.profile-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+.profile-card p {
+    font-size: 0.85rem;
+    color: #6c5ce7;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.nav-menu {
+    list-style: none;
+    margin-top: 35px;
+    flex-grow: 1;
+}
+.nav-item {
+    padding: 14px 18px;
+    margin-bottom: 8px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    color: #a0a0aa;
+    transition: all 0.25s ease;
+}
+.nav-item:hover, .nav-item.active {
+    background-color: rgba(108, 92, 231, 0.15);
+    color: #fff;
+    border-left: 4px solid #6c5ce7;
+    padding-left: 14px;
+}
+.nav-item.active {
+    background-color: #6c5ce7;
+}
+
+/* --- ANA İÇERİK ALANI --- */
+.main-content {
+    flex-grow: 1;
+    position: relative;
+    height: 100%;
+    overflow-y: auto;
+}
+.page {
+    display: none;
+    height: 100%;
+    width: 100%;
+    padding: 40px;
+}
+.page.active {
+    display: block;
+}
+
+/* --- DASHBOARD HERO --- */
+#page-home {
+    background: transparent;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 60px;
+}
+#page-home.active { 
+    display: flex; 
+}
+.hero-title {
+    font-size: 3.8rem;
+    margin-bottom: 16px;
+    font-weight: 800;
+    letter-spacing: -1.5px;
+    background: linear-gradient(45deg, #ffffff, #a29bfe, #00cec9);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: #b4b4bb;
+    max-width: 650px;
+    margin-bottom: 35px;
+    line-height: 1.6;
+}
+
+/*--- ARAMA VE FORM ALANLARI ---*/
+.form-container, .search-container {
+    background: rgba(26, 26, 30, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 24px;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 30px;
+}
+.form-row {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.form-group {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+}
+.form-group label {
+    font-size: 0.85rem;
+    color: #a0a0aa;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.form-control, .search-input, .search-select {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 1rem;
+    outline: none;
+    transition: all 0.3s;
+}
+.form-control:focus, .search-input:focus {
+    border-color: #6c5ce7;
+    background: rgba(0,0,0,0.5);
+    box-shadow: 0 0 10px rgba(108, 92, 231, 0.2);
+}
+.btn-primary {
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 8px 24px rgba(108, 92, 231, 0.35);
+}
+.btn-primary:hover {
+    background-color: #5b4cc4;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(108, 92, 231, 0.5);
+}
+.btn-form {
+    padding: 14px 28px;
+    background-color: #6c5ce7;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+.btn-form:hover { 
+    background-color: #5b4cc4; 
+}
+
+/* --- KART GRID TASARIMI --- */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 28px;
+    margin-top: 15px;
+}
+.media-card {
+    background: rgba(26, 26, 30, 0.5);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.media-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 30px rgba(108, 92, 231, 0.3);
+}
+.card-img-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 140%;
+    background-color: #16161a;
+    overflow: hidden;
+    cursor: pointer;
+}
+.card-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    padding: 8px 8px 0 8px;
+    border-radius: 12px 12px 0 0;
+}
+.card-info {
+    padding: 12px;
+    background: transparent;
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    text-align: center;
+}
+.card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+.card-meta {
+    font-size: 0.8rem;
+    color: #a0a0aa;
+    margin-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.btn-card-action {
+    width: 100%;
+    padding: 8px;
+    background: transparent;
+    border: 1px solid #b2bec3;
+    color: #ffffff;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.btn-card-action.btn-add {
+    border-color: #6c5ce7;
+    color: #6c5ce7;
+}
+.btn-card-action.btn-add:hover {
+    background: #6c5ce7;
+    color: #fff;
+}
+.btn-card-action.btn-remove {
+    border-color: #ff7675;
+    color: #ff7675;
+}
+.btn-card-action.btn-remove:hover {
+    background: #ff7675;
+    color: #fff;
+}
+
+/* Badgeler */
+.badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.65rem;
+    font-weight: 800;
+    z-index: 5;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.badge-film { background: #00cec9; color: #fff; }
+.badge-kitap { background: #e67e22; color: #fff; }
+.badge-acc { background: #a29bfe; color: #000; }
+
+/* AYRI EKRAN KATEGORİ BAŞLIKLARI */
+.category-heading {
+    font-size: 1.3rem;
+    color: #ffffff;
+    border-bottom: 2px solid rgba(108, 92, 231, 0.4);
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+/* HESAP KARTLARI */
+.account-card {
+    background: rgba(26, 26, 30, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 18px;
+    border: 1px solid rgba(255,255,255,0.05);
+    padding: 24px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 240px;
+}
+.account-avatar {
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin-bottom: 12px;
+    border: 2px solid #6c5ce7;
+    object-fit: cover;
+}
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 8px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+.btn-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 118, 117, 0.4);
+    color: #ff7675;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+.btn-logout:hover {
+    background: #ff7675;
+    color: #fff;
+}
+
+/* --- MODAL DETAY PENCERESİ --- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    overflow-y: auto;
+    padding: 20px;
+}
+.modal-box {
+    background: #16161a;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 650px;
+    padding: 30px;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+    position: relative;
+    color: #fff;
+}
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: #aaa;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.25s;
+}
+.modal-close:hover { color: #fff; }
+.modal-header {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 25px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding-bottom: 20px;
+}
+.modal-header-img {
+    width: 110px;
+    height: 155px;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.modal-header-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.modal-body-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+/* Yıldız Puanlama */
+.rating-zone {
+    display: flex;
+    gap: 5px;
+    font-size: 1.5rem;
+    color: #fdcb6e;
+    cursor: pointer;
+    margin-top: 5px;
+}
+.rating-star { opacity: 0.3; transition: opacity 0.2s; }
+.rating-star.filled { opacity: 1; }
+
+/* Sezon Seçim Kutuları */
+.season-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+.season-badge {
+    padding: 6px 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: all 0.2s;
+}
+.season-badge.watched {
+    background: #6c5ce7;
+    border-color: #6c5ce7;
+    box-shadow: 0 0 10px rgba(108, 92, 231, 0.4);
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+.stat-card {
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+}
+.stat-card h2 {
+    color: #6c5ce7;
+    font-size: 2rem;
+}
